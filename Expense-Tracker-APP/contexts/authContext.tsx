@@ -5,10 +5,8 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthState
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { AuthContextType, userType } from '@/types/type';
 
-// ✅ Correctly declare AuthContext
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// ✅ Define props
 interface AuthProviderProps {
   children: React.ReactNode;
 }  
@@ -17,7 +15,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<userType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // ✅ Update user on auth change
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
@@ -102,7 +99,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// ✅ useAuth hook
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

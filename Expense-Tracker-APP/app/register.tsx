@@ -6,22 +6,44 @@ import BackButton from '@/components/backButton'
 import Typography from '@/components/Typography'
 import { useRouter } from 'expo-router'
 import PrimaryButton from '@/components/PrimaryButton'
+import { useAuth } from '@/contexts/authContext'
 
 const Register = () => {
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmedPassword, setConfirmedPassword] = useState('')
+  const [isLoading,setIsLoading] = useState(false)
   const router = useRouter();
   const theme = useTheme();
+  const {register:registerUser} = useAuth();
 
   const handleSubmit = async () => {
     if(!userName || !email || !password || !confirmedPassword){
       Alert.alert("Please fill the all fields")
     }
-    console.log(userName)
-    console.log(email)
-    console.log(password)
+    if(password.length < 8){
+      Alert.alert("Password must be atleast 8 characters")
+    }
+    if(password !== confirmedPassword){
+      Alert.alert("Passwords are mismatched! Enter the correct Password.")
+    }
+    setIsLoading(true)
+
+    const response = await registerUser(
+      email,
+      password,
+      userName
+    )
+    setIsLoading(false)
+    if(!response.success){
+      Alert.alert(response.msg? response.msg : "An error occured!")
+    }
+    else{
+      router.push('/home')
+    }
+
+    
   }
 
   return (
