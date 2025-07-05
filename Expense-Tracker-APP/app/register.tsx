@@ -40,7 +40,7 @@ const Register = () => {
       Alert.alert(response.msg? response.msg : "An error occured!")
     }
     else{
-      router.push('/home')
+      router.push('/')
     }
 
     

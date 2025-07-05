@@ -1,24 +1,37 @@
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { TextInput, useTheme } from 'react-native-paper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import BackButton from '@/components/backButton'
 import Typography from '@/components/Typography'
 import { useRouter } from 'expo-router'
 import PrimaryButton from '@/components/PrimaryButton'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/config/firebase'
+import { useAuth } from '@/contexts/authContext'
 
 const login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter();
   const theme = useTheme();
+  const {login} = useAuth();
+
+  
 
   const handleSubmit = async () => {
     if(!email || !password){
       Alert.alert("Please fill the all fields")
     }
-    console.log(email)
-    console.log(password)
+    const result = await login(email,password);
+
+    if(result.success){
+      router.replace('/(tabs)')
+      
+    }
+    else{
+      Alert.alert('Login falied! ',result.msg)
+    }
   }
 
   return (
