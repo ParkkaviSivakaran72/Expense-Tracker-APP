@@ -49,3 +49,10 @@ export interface HeaderProps {
   subtitle?: string;
   center?: boolean;
 }
+
+export interface accountType {
+    title:string,
+    icon:React.ReactNode,
+    bgColor:string,
+    routeName?:any
+}

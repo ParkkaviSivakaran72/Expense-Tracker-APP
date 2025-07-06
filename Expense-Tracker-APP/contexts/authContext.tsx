@@ -1,8 +1,18 @@
-// context/AuthContext.tsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { auth, firestore } from '@/config/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '@/config/firebase'; // your web SDK instances
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  updateProfile,
+  User,
+} from 'firebase/auth';
+import {
+  doc,
+  getDoc,
+  setDoc,
+} from 'firebase/firestore';
 import { AuthContextType, userType } from '@/types/type';
 import { useRouter } from 'expo-router';
 
@@ -10,28 +20,52 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 interface AuthProviderProps {
   children: React.ReactNode;
-}  
+}
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<userType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
+  const fetchUserData = async (uid: string) => {
+    try {
+      const userRef = doc(db, 'users', uid);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const data = userDoc.data();
         setUser({
-          uid:firebaseUser?.uid,
-          email:firebaseUser?.email,
-          name:firebaseUser?.displayName
+          uid: data.uid,
+          email: data.email || null,
+          name: data.name || null,
+          image: data.image || null,
+        });
+      } else {
+        const currentUser = auth.currentUser;
+        setUser({
+          uid,
+          email: currentUser?.email || null,
+          name: currentUser?.displayName || null,
+          image: null,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        })
-        router.replace("/")
-
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        await fetchUserData(firebaseUser.uid);
+        router.replace('/(tabs)');
       } else {
         setUser(null);
         setLoading(false);
-        router.replace("/login")
+        router.replace('/');
       }
     });
 
@@ -39,54 +73,51 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
       return { success: true };
     } catch (error: any) {
       return { success: false, msg: error.message };
+    } finally {
+      setLoading(false);
     }
   };
 
   const register = async (email: string, password: string, name: string) => {
+    setLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(firestore, 'users', response.user.uid), {
-        name,
-        email,
+      await setDoc(doc(db, 'users', response.user.uid), {
         uid: response.user.uid,
+        email,
+        name,
       });
+      await updateProfile(response.user, { displayName: name });
       return { success: true };
     } catch (error: any) {
       return { success: false, msg: error.message };
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = async () => {
+    setLoading(true);
     try {
       await signOut(auth);
       return { success: true };
     } catch (error: any) {
       return { success: false, msg: error.message };
+    } finally {
+      setLoading(false);
     }
   };
 
   const updateUserData = async (uid: string) => {
+    setLoading(true);
     try {
-      const userRef = doc(firestore, 'users', uid);
-      const docSnap = await getDoc(userRef);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const userData: userType = {
-          uid: data.uid,
-          email: data.email || null,
-          name: data.name || null,
-          image: data.image || null,
-        };
-        setUser(userData);
-      }
-    } catch (error: any) {
-      console.error('Failed to update user data:', error);
+      await fetchUserData(uid);
     } finally {
       setLoading(false);
     }
@@ -102,17 +133,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
   };
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

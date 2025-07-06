@@ -2,8 +2,6 @@ import { HeaderProps } from '@/types/type';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-
-
 const Header: React.FC<HeaderProps> = ({ title, subtitle, center = false }) => {
   return (
     <View style={[styles.container, center && styles.centerAlign]}>
@@ -17,16 +15,16 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    backgroundColor: '#1c1c1c',
+    
+    paddingHorizontal: 10,
+    backgroundColor: '#101010',
   },
   centerAlign: {
     alignItems: 'center',
   },
   title: {
     color: '#ffffff',
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
   },
   subtitle: {

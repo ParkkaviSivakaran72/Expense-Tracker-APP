@@ -30,12 +30,7 @@ const index = () => {
       <Text style={styles.subtitle}>Manage your money smarter, every day.</Text>
       </Animated.View>
       </Typography>
-    <PrimaryButton style={styles.getStartedButton} onPress={() => router.push('/register')} label="Get Started" />
-      
-       
-      
-     
-      
+    <PrimaryButton style={styles.getStartedButton} onPress={() => router.push('/register')} label="Get Started" />  
     </View>
     </ScreenWrapper>
   );

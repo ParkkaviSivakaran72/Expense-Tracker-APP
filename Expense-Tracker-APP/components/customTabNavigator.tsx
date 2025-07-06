@@ -66,7 +66,7 @@ const MyTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation 
             testID={options.tabBarButtonTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={{ flex: 1, alignItems: 'center', padding: 10,  }}
+            style={{ flex: 1, alignItems: 'center', padding: 10, margin:10  , justifyContent:'center' }}
           >
             {
                 tabBarIcons[route.name] && tabBarIcons[route.name](isFocused)

@@ -10,7 +10,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/config/firebase'
 import { useAuth } from '@/contexts/authContext'
 
-const login = () => {
+const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter();
@@ -100,7 +100,7 @@ const login = () => {
 
   )
 }
-export default login
+export default Login
 
 const styles = StyleSheet.create({
   headerWrapper: {
