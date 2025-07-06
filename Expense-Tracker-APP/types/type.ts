@@ -1,5 +1,6 @@
 // types/type.ts
-import { GestureResponderEvent, TextStyle } from "react-native";
+import { ReactNode } from "react";
+import { GestureResponderEvent, TextStyle, ViewStyle } from "react-native";
 
 export interface ScreenWrapperProps {
     children: React.ReactNode;
@@ -41,4 +42,10 @@ export interface AuthContextType {
   logout: () => Promise<{ success: boolean; msg?: string }>;
   updateUserData: (uid: string) => Promise<void>;
   loading: boolean;
+}
+
+export interface HeaderProps {
+  title: string;
+  subtitle?: string;
+  center?: boolean;
 }
