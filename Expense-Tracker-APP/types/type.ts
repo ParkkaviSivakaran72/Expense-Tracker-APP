@@ -63,3 +63,23 @@ export interface responseType {
     msg?:string
 
 }
+
+export interface wallettype{
+    id?: string,
+    name: string,
+    amount?: number,
+    totalIncome?:number,
+    totalExpense?: number,
+    image?:any,
+    uid:string,
+    createdAt?: Date,
+}
+
+export interface imageUploadType {
+    file?:any,
+    onSelect:  (file:any) => void,
+    onClear: () => void,
+    style:ViewStyle,
+    imagestyle:ViewStyle,
+    placeholder?: string
+}

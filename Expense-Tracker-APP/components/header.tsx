@@ -4,16 +4,23 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const Header: React.FC<HeaderProps> = ({ title, subtitle, center = false }) => {
   return (
-    <View style={[styles.container, center && styles.centerAlign]}>
+    <View style={styles.first}>
+      <View style={[styles.container, center && styles.centerAlign]}>
       <Text style={styles.title}>{title}</Text>
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </View>
+    </View>
+    
   );
 };
 
 export default Header;
 
 const styles = StyleSheet.create({
+  first:{
+    flex:1,
+    flexDirection: 'row',
+  },
   container: {
     
     paddingHorizontal: 10,
