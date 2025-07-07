@@ -75,16 +75,16 @@ const Login = () => {
           textColor='#ffffff'
           theme={{
             colors: {
-              primary: '#00BFA6',     // focused border and label color
-              text: '#ffffff',        // input text color
-              placeholder: '#cccccc', // label color when not focused
-              background: '#1c1c1c',  // background color if needed
+              primary: '#00BFA6',     
+              text: '#ffffff',        
+              placeholder: '#cccccc', 
+              background: '#1c1c1c',  
             }
           }}
         />
       </View>
 
-      <Pressable onPress={() => router.push('/forgotPassword')}>
+      <Pressable onPress={() => router.push('/changePassword')}>
         <Text style={styles.forgotText}>Forgot Password?</Text>
       </Pressable>
 

@@ -10,7 +10,7 @@ export interface ScreenWrapperProps {
 export interface TypographyProps {
     children: React.ReactNode;
     variant?: 'title' | 'subtitle' | 'body';
-    style?: TextStyle;
+    style?: any;
 }
 
 export interface PrimaryButtonProps {

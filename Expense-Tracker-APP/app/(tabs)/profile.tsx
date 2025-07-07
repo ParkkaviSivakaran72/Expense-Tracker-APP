@@ -27,11 +27,13 @@ const Profile = () => {
     {
       title: 'Settings',
       icon: <Icons.Gear size={24} weight="fill" color="#fff" />,
+      routeName: '/(modals)/settings',
       bgColor: '#0077FF',
     },
     {
       title: 'Privacy Policy',
       icon: <Icons.Lock size={24} weight="fill" color="#fff" />,
+      routeName: '/(modals)/privacyPolicy',
       bgColor: '#FFC107',
     },
     {
@@ -131,9 +133,9 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   avatar: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     marginBottom: 8,
   },
   name: {

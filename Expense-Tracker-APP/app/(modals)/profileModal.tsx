@@ -12,6 +12,7 @@ import * as Icons from 'phosphor-react-native'
 import { useAuth } from '@/contexts/authContext';
 import { updateUser } from '@/services/userServices';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 
 const ProfileModal = () => {
   const [userData, setUserData] = useState<UserDataType>({
@@ -29,6 +30,22 @@ const ProfileModal = () => {
     })
 
   },[])
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images', 'videos'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setUserData({...userData, image:result.assets[0]});
+    }
+  };
 
   const handleSubmit = async () => {
     let {name,image} = userData;
@@ -54,13 +71,16 @@ const ProfileModal = () => {
 
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
+          <TouchableOpacity onPress={pickImage}>
           <Image
             source={getProfileImage(userData.image)}
             style={styles.avatar}
             contentFit="cover"
             transition={200}
           />
+          
           <Icons.PencilLine size={32} weight="fill" style={styles.editIcon} />
+          </TouchableOpacity>
           
         </View>
 
@@ -112,15 +132,15 @@ const styles = StyleSheet.create({
   },
   
   avatar: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     position:'relative'
   },
   editIcon: {
   position: 'absolute',
-  bottom: 35,
-  right: 100,
+  bottom: 1,
+  right: 10,
   backgroundColor: '#dddddd',
   borderRadius: 20,
   padding: 6,
