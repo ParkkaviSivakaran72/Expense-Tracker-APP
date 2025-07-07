@@ -56,3 +56,10 @@ export interface accountType {
     bgColor:string,
     routeName?:any
 }
+
+export interface responseType {
+    success:boolean,
+    data?:any,
+    msg?:string
+
+}

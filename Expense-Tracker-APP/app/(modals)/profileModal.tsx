@@ -10,6 +10,8 @@ import { TextInput, Button } from 'react-native-paper';
 import BackButton from '@/components/backButton';
 import * as Icons from 'phosphor-react-native'
 import { useAuth } from '@/contexts/authContext';
+import { updateUser } from '@/services/userServices';
+import { useRouter } from 'expo-router';
 
 const ProfileModal = () => {
   const [userData, setUserData] = useState<UserDataType>({
@@ -17,7 +19,8 @@ const ProfileModal = () => {
     image: null,
   });
   const [loading,setLoading] = useState(false)
-  const {user} = useAuth();
+  const {user, updateUserData} = useAuth();
+  const router = useRouter();
 
   useEffect(()=>{
     setUserData({
@@ -27,13 +30,21 @@ const ProfileModal = () => {
 
   },[])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let {name,image} = userData;
     if(!name ){
         Alert.alert('Please fill all fields!')
     }
-    console.log("Success")
-    console.log(name)
+    setLoading(true);
+    const response = await updateUser(user?.uid as string,userData);
+    setLoading(false);
+    if(response.success){
+      updateUserData(user?.uid as string);
+      router.back()
+    }
+    else{
+      Alert.alert('Update Failed', response.msg || 'Something went wrong, please try again later.');
+    }
   }
 
   return (
